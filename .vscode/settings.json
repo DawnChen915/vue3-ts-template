@@ -5,4 +5,5 @@
   },
   "editor.formatOnSave": true,
   "liveServer.settings.port": 5502,
+  "vue.codeActions.enabled": false,
 }

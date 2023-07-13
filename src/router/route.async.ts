@@ -106,6 +106,24 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     },
     component: () => import('@/views/display/grid.vue'),
   },
+  {
+    path: '/word',
+    name: 'word',
+    meta: {
+      title: 'word',
+      icon: '',
+    },
+    component: () => import('@/views/word/index.vue'),
+  },
+  {
+    path: '/word/newWord',
+    name: 'newWord',
+    meta: {
+      title: 'newWord',
+      icon: '',
+    },
+    component: () => import('@/views/word/newWord.vue'),
+  },
 ];
 
 export default asyncRoutes;
