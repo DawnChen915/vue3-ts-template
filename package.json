@@ -1,7 +1,7 @@
 {
   "name": "test-vue3-ts-template",
   "version": "0.0.0",
-  "author": "菜猫子neko",
+  "author": "dawn",
   "license": "MIT",
   "scripts": {
     "dev": "vite",

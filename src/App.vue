@@ -9,10 +9,9 @@ const en = enLocale
   <div class="dark:bg-dark-50 dark:text-light-50">
     <GoBackHome></GoBackHome>
     <div class="m-5">
-      <el-config-provider :locale="en">
+      <el-config-provider :locale="locale">
         <router-view></router-view>
       </el-config-provider>
     </div>
   </div>
-
 </template>

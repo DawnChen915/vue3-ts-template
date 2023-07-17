@@ -22,13 +22,14 @@
       <el-table-column prop="remark" label="备注" align="center" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="handleRemove(scope.row)">删除</el-button>
+          <el-button link size="small" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button link size="small" @click="handleRemove(scope.row)">删除</el-button>
+          <el-button link size="small" @click="perview(scope.row)">预览</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 40]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+      class="m-5" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
     <el-dialog :title="formMode" :visible.sync="dialogFormVisible">
@@ -57,6 +58,11 @@
         <el-button type="primary" @click="formSubmit">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 预览 -->
+    <el-dialog v-model="perviewDialog" @close="perviewDialog = false" width="fit-content">
+      <div v-html="html"></div>
+    </el-dialog>
+
   </div>
 </template>
 <script setup lang='ts'>
@@ -144,6 +150,27 @@ const handleRemove = (row: any) => {
       message: '已取消删除'
     });
   });
+}
+const route = useRoute()
+//展示数据
+if (route.params) {
+  const data = {
+    id: route.params.id,
+    moduleName: route.params.moduleName,
+    moduleCode: route.params.moduleCode,
+    moduleVersion: route.params.moduleVersion,
+    html: route.params.html,
+    statu: route.params.statu,
+    remark: route.params.remark,
+  }
+  tableData.value.push(data)
+}
+//预览
+const perviewDialog = ref(false)
+const html = ref('')
+const perview = (row: any) => {
+  perviewDialog.value = true
+  html.value = row.html
 }
 </script>
 <style scoped>

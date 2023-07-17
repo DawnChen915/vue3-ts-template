@@ -102,7 +102,7 @@
     </div>
     <div class="control">
       <el-button type="primary" @click="reload">重新渲染</el-button>
-      <el-button type="success" @click="save">保存</el-button>
+      <el-button type="success" @click="saveVisible = true">保存</el-button>
       <el-button class="output" @click="exportWord">导出文档</el-button>
       <div style="padding: 20px;">
         <div style="font-size: 20px;"> 模板组件: {{ pick.content }}</div>
@@ -162,6 +162,23 @@
     <el-dialog title="添加" v-model="component.visible" width="600px" @close="component.visible = false">
       <component :is="component.component" @addImage="handleAddImage"></component>
     </el-dialog>
+    <el-dialog title="保存" v-model="saveVisible" width="300px" @close="saveVisible = false">
+      <el-form :model="saveParams">
+        <el-form-item label="模板名称" required>
+          <el-input v-model="saveParams.moduleName"></el-input>
+        </el-form-item>
+        <el-form-item label="模板编号">
+          <el-input v-model="saveParams.moduleCode"></el-input>
+        </el-form-item>
+        <el-form-item label="模板版本号">
+          <el-input v-model="saveParams.moduleVersion"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="saveVisible = false">取 消</el-button>
+        <el-button type="primary" @click="save">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -173,9 +190,12 @@ import { Picture, TrendCharts } from '@element-plus/icons-vue'
 import charts from './charts.vue';
 import tables from './table.vue';
 import images from './image.vue';
+import { AnyARecord } from 'dns';
+import router from '@/router';
 
 const title = ref<string>('默认标题')
-const subTitle = ref<string>(`XX电力交易中心
+const subTitle = ref<string>(`
+XX电力交易中心
 二〇二X年X月
 `)
 //展示副标题
@@ -318,10 +338,10 @@ const pick = ref<{
   }
 })
 interface Tree {
-  id: number
-  type?: string
-  label: string
-  url?: string
+  id: number       //id
+  type?: string   //类型
+  label: string   //标题
+  url?: string  //图片路径
   children?: Tree[]
 }
 const dataSource = ref<Tree[]>([
@@ -358,9 +378,9 @@ const dataSource = ref<Tree[]>([
       }
     ]
   }
-
 ])
 let id = 1000
+//新增节点
 const append = (node: Node, data: Tree) => {
   let type = ''
   switch (node.level) {
@@ -386,11 +406,13 @@ const append = (node: Node, data: Tree) => {
   data.children.push(newChild)
   dataSource.value = [...dataSource.value]
 }
+//新增根节点节点
 const add = () => {
   const newChild = { id: id++, type: 'paragraphTitle', label: '', children: [] }
   dataSource.value.push(newChild)
   dataSource.value = [...dataSource.value]
 }
+// 删除节点
 const remove = (node: Node, data: Tree) => {
   const parent = node.parent
   const children: Tree[] = parent.data.children || parent.data
@@ -398,13 +420,16 @@ const remove = (node: Node, data: Tree) => {
   children.splice(index, 1)
   dataSource.value = [...dataSource.value]
 }
+// 重新渲染
 const reload = () => {
   console.log(dataSource.value)
   dataSource.value = [...dataSource.value]
 }
+// 修改节点
 const handleChange = (value: string, node: Node) => {
   node.data.label = value
 }
+// 点击节点
 const inputClick = (node: Node, data: Tree) => {
   pick.value = content.value.find((item) => item.type === data.type) as any
 }
@@ -463,14 +488,7 @@ const getStyle = () => {
 const inputClick2 = (type?: string) => {
   //pick.value = content.value.find((item) => item.type === type)
 }
-const save = () => {
-  console.log(dataSource.value)
-  console.log(title.value)
-  console.log(subTitle.value)
-  const html = getModelHtml(getHtml(document.querySelector('.print') as Element), getStyle())
 
-
-}
 
 const dynamicStyle = (type: string) => {
   return content.value.find((item) => item.type === type)?.style as any
@@ -485,7 +503,7 @@ const component = ref({
   },
   component: '',
 })
-const addCom = (type: string, components: any, node: Node) => {
+const addCom = (type: string, components: any, node: any) => {
   component.value.type = type
   component.value.component = markRaw(components)
   component.value.data = node.parent
@@ -493,7 +511,6 @@ const addCom = (type: string, components: any, node: Node) => {
 }
 //将图片加入word文档
 const handleAddImage: (obj: { base64: string, title: string }) => void = ({ base64, title }) => {
-  debugger
   const newChild = { id: id++, type: component.value.type, label: title, url: base64 }
   component.value.visible = false
   const parent = component.value.data.data
@@ -503,6 +520,30 @@ const handleAddImage: (obj: { base64: string, title: string }) => void = ({ base
   } else {
     parent.children.push(newChild)
   }
+}
+
+// 保存
+const saveVisible = ref(false)
+const saveParams = ref({
+  moduleName: '',
+  moduleCode: '',
+  moduleVersion: '',
+})
+const save = () => {
+  const html = getModelHtml(getHtml(document.querySelector('.print') as Element), getStyle())
+  router.push({
+    name: 'word',
+    params: {
+      html: html,
+      title: title.value,
+      subTitle: subTitle.value,
+      dataSource: JSON.stringify(dataSource.value),
+      content: JSON.stringify(content.value),
+      moduleName: saveParams.value.moduleName,
+      moduleCode: saveParams.value.moduleCode,
+      moduleVersion: saveParams.value.moduleVersion,
+    }
+  })
 }
 </script>
 
