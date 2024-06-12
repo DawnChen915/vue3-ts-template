@@ -5,12 +5,12 @@
       <div class="title" style="font-size:16px;margin-left: 20px;padding: 10px;">封面内容</div>
       <div class="flex">
         <div class="flex-1">
-          <el-input v-model="title" placeholder="请输入标题" @click="inputClick2('')"></el-input>
+          <el-input v-model="module.pageTitle" placeholder="请输入标题" @click="inputClick2('')"></el-input>
         </div>
       </div>
       <div class="flex mt-3">
         <div class="flex-1">
-          <el-input type="textarea" v-model="subTitle" placeholder="请输入副标题" @click="inputClick2()"></el-input>
+          <el-input type="textarea" v-model="module.pageDate" placeholder="请输入副标题"></el-input>
         </div>
       </div>
       <div style="margin-top: 20px;font-size:16px;margin-left: 20px;padding: 10px;">模板内容</div>
@@ -19,27 +19,12 @@
       <el-tree :data="dataSource" node-key="id" default-expand-all :expand-on-click-node="false">
         <template #default="{ node, data }">
           <span class="custom-tree-node">
-            <!-- <el-input :model-value="node.label" placeholder="请输入" @input="handleChange($event, node)"
+            <el-input :model-value="node.label" placeholder="请输入" @input="handleChange($event, node)"
               @click="inputClick(node, data)">
-
-
-            </el-input> -->
-            <!-- <el-autocomplete v-model="data.label" :fetch-suggestions="querySearch" :trigger-on-focus="false" clearable
-              class="inline-input w-50" placeholder="Please Input" @select="handleSelect($event, data)">
               <template #prepend>
                 <el-button :icon="NodeIcon(data)" />
               </template>
-            </el-autocomplete> -->
-            <!-- <sand-box v-model="data.label" @input="handleChange($event, node)">
-              <template #prepend>
-                <el-button :icon="NodeIcon(data)" />
-              </template>
-            </sand-box> -->
-            <myAutoComplete v-model="data.label">
-              <template #prepend>
-                <el-button :icon="NodeIcon(data)" />
-              </template>
-            </myAutoComplete>
+            </el-input>
             <div style="margin-left: 20px;">
               <a v-if="node.level < 4" @click="append(node, data)"> + </a>
               <el-popover v-if="node.level == 4" placement="right" trigger="click">
@@ -78,7 +63,7 @@
           </div>
           <div class="text-heading">
             <div>
-              {{ title }}
+              {{ module.pageTitle }}
             </div>
             <div>（模板）</div>
             <div class="text-heading-end">
@@ -106,7 +91,7 @@
                           <div style="font-size: 16px;margin-top: 10px;font-family: 黑体;">{{ textContent.label }}</div>
                         </div>
                         <div v-if="textContent.type == 'tables'">
-                          <div v-html="textContent.url" class="tables" :style="(textContent.style as any)"></div>
+                          <div v-html="textContent.url" :style="(textContent.style as any)"></div>
                           <div style="font-size: 16px;margin-top: 10px;font-family: 黑体;">{{ textContent.label }}</div>
                         </div>
                         <div v-if="textContent.type == 'charts'">
@@ -125,99 +110,84 @@
       </div>
     </div>
     <div class="control">
-      <!-- <el-button type="primary" @click="reload">重新渲染</el-button> -->
+      <el-button type="primary" @click="reload">重新渲染</el-button>
       <el-button type="success" @click="saveVisible = true">保存</el-button>
       <el-button class="output" @click="exportWord">导出文档</el-button>
-      <el-tabs style="margin-top: 20px;">
-        <el-tab-pane>
-          <template #label>
-            <span class="custom-tabs-label">
-              <span>样式配置</span>
-            </span>
-          </template>
-          <div style="padding: 20px;">
-            <div style="font-size:18px;font-weight:bold;margin:0 20px 20px;"> 模板组件: {{ pick.content }}</div>
-            <el-form :model="pick" v-if="pick.content">
-              <el-form-item label="字体大小">
-                <el-input v-model="pick.style.fontSize"></el-input>
-              </el-form-item>
-              <el-form-item label="字体粗细">
-                <el-input v-model="pick.style.fontWeight"></el-input>
-              </el-form-item>
-              <el-form-item label="字体颜色">
-                <el-color-picker v-model="pick.style.color"></el-color-picker>
-              </el-form-item>
-              <el-form-item label="字体对齐">
-                <!-- <el-input v-model="pick.style.textAlign"></el-input> -->
-                <el-select v-model="pick.style.textAlign" placeholder="">
-                  <el-option label="left" value="left"></el-option>
-                  <el-option label="center" value="center"></el-option>
-                  <el-option label="right" value="right"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="字体缩进">
-                <el-input v-model="pick.style.textIndent"></el-input>
-              </el-form-item>
-              <el-form-item label="字体间距">
-                <el-input v-model="pick.style.letterSpacing"></el-input>
-              </el-form-item>
-              <el-form-item label="字体行高">
-                <el-input v-model="pick.style.lineHeight"></el-input>
-              </el-form-item>
-              <el-form-item label="字体样式">
-                <!-- <el-input v-model="pick.style.fontFamily"></el-input> -->
-                <el-select v-model="pick.style.fontFamily" placeholder="">
-                  <el-option label="宋体" value="宋体"></el-option>
-                  <el-option label="黑体" value="黑体"></el-option>
-                  <el-option label="楷体" value="楷体"></el-option>
-                  <el-option label="仿宋" value="仿宋"></el-option>
-                  <el-option label="微软雅黑" value="微软雅黑"></el-option>
-                  <el-option label="Arial" value="Arial"></el-option>
-                  <el-option label="Tahoma" value="Tahoma"></el-option>
-                  <el-option label="Verdana" value="Verdana"></el-option>
-                  <el-option label="Times New Roman" value="Times New Roman"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="字体换行">
-                <el-input v-model="pick.style.whiteSpace"></el-input>
-              </el-form-item>
-              <el-form-item label="宽">
-                <el-input v-model="pick.style.width"></el-input>
-              </el-form-item>
-              <el-form-item label="高">
-                <el-input v-model="pick.style.height"></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane>
-          <template #label>
-            <span>
-
-              <span>数据源配置</span>
-            </span>
-          </template>
-          数据源配置
-        </el-tab-pane>
-      </el-tabs>
+      <div style="padding: 20px;">
+        <div style="font-size: 20px;"> 模板组件: {{ pick.content }}</div>
+        <el-form :model="pick" v-if="pick.content">
+          <el-form-item label="字体大小">
+            <el-input v-model="pick.style.fontSize"></el-input>
+          </el-form-item>
+          <el-form-item label="字体粗细">
+            <el-input v-model="pick.style.fontWeight"></el-input>
+          </el-form-item>
+          <el-form-item label="字体颜色">
+            <el-color-picker v-model="pick.style.color"></el-color-picker>
+          </el-form-item>
+          <el-form-item label="字体对齐">
+            <!-- <el-input v-model="pick.style.textAlign"></el-input> -->
+            <el-select v-model="pick.style.textAlign" placeholder="">
+              <el-option label="left" value="left"></el-option>
+              <el-option label="center" value="center"></el-option>
+              <el-option label="right" value="right"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="字体缩进">
+            <el-input v-model="pick.style.textIndent"></el-input>
+          </el-form-item>
+          <el-form-item label="字体间距">
+            <el-input v-model="pick.style.letterSpacing"></el-input>
+          </el-form-item>
+          <el-form-item label="字体行高">
+            <el-input v-model="pick.style.lineHeight"></el-input>
+          </el-form-item>
+          <el-form-item label="字体样式">
+            <!-- <el-input v-model="pick.style.fontFamily"></el-input> -->
+            <el-select v-model="pick.style.fontFamily" placeholder="">
+              <el-option label="宋体" value="宋体"></el-option>
+              <el-option label="黑体" value="黑体"></el-option>
+              <el-option label="楷体" value="楷体"></el-option>
+              <el-option label="仿宋" value="仿宋"></el-option>
+              <el-option label="微软雅黑" value="微软雅黑"></el-option>
+              <el-option label="Arial" value="Arial"></el-option>
+              <el-option label="Tahoma" value="Tahoma"></el-option>
+              <el-option label="Verdana" value="Verdana"></el-option>
+              <el-option label="Times New Roman" value="Times New Roman"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="字体换行">
+            <el-input v-model="pick.style.whiteSpace"></el-input>
+          </el-form-item>
+          <el-form-item label="对齐方式">
+            <el-input v-model="pick.style.margin"></el-input>
+          </el-form-item>
+          <el-form-item label="宽">
+            <el-input v-model="pick.style.width"></el-input>
+          </el-form-item>
+          <el-form-item label="高">
+            <el-input v-model="pick.style.height"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
     <el-dialog title="添加" v-model="component.visible" width="600px" @close="component.visible = false">
       <component :is="component.component" @addImage="handleAddImage"></component>
     </el-dialog>
     <el-dialog title="保存" v-model="saveVisible" width="400px" @close="saveVisible = false">
-      <el-form ref="saveFormRef" :model="saveParams" label-width="100px" style="margin-right: 50px;">
+      <el-form ref="saveFormRef" :model="module" label-width="100px" style="margin-right: 50px;">
         <el-form-item label="模板名称" required prop="moduleName"
           :rules="[{ required: true, message: '请输入模板名称', trigger: 'blur' }]">
-          <el-input v-model="saveParams.moduleName"></el-input>
+          <el-input v-model="module.moduleName"></el-input>
         </el-form-item>
         <el-form-item label="模板编号" prop="modulesCode">
-          <el-input v-model="saveParams.moduleCode" placeholder="00001"></el-input>
+          <el-input v-model="module.moduleCode" placeholder="00001"></el-input>
         </el-form-item>
         <el-form-item label="模板版本号" prop="moduleVersion">
-          <el-input v-model="saveParams.moduleVersion" placeholder="1.0.0"></el-input>
+          <el-input v-model="module.moduleVersion" placeholder="1.0.0"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" v-model="saveParams.remark" placeholder="备注说明，简单描述该模板用来干啥"></el-input>
+          <el-input type="textarea" v-model="module.remark" placeholder="备注说明，简单描述该模板用来干啥"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -244,18 +214,45 @@ import iconH2 from '@/components/icons/iconH2.vue'
 import iconH3 from '@/components/icons/iconH3.vue'
 import iconH4 from '@/components/icons/iconH4.vue'
 import reportApi from '@/api/modules/word'
-import sandBox from '@/components/sandBox.vue'
-import myAutoComplete from '@/components/myAutoComplete.vue';
+import type { Module } from '@/api/modules/word';
+const { params } = useRoute()
+const moduleId = Number(params.id)
+const module = ref<Module>({
+  id: 0,
+  moduleName: '',
+  moduleCode: '',
+  moduleVersion: '',
+  moduleType: 0,
+  pageContent: '',
+  pageTitle: '',
+  pageDate: '',
+  status: 0,
+  remark: ''
+})
+const findList = () => {
+  reportApi.pageData({ current: 1, size: 100 }).then(res => {
+    module.value = res.data.records.find((item: Module) => item.id == moduleId)
+  })
+}
+const findContent = () => {
+  reportApi.findModuleStyle(moduleId).then(res => {
+    const node = JSON.parse(res.data[res.data.length - 1].nodeInfo)
+    dataSource.value = node
+    console.log(dataSource.value)
+  })
+}
+findList()
+findContent()
 
-const title = ref<string>('默认标题')
-const subTitle = ref<string>(`XX电力交易中心
-二〇二X年X月
-`)
+// const title = ref<string>('默认标题')
+// const subTitle = ref<string>(`XX电力交易中心
+// 二〇二X年X月
+// `)
 //展示副标题
 const showSubTitle = computed(() => {
-  return subTitle.value.replace(/\n/g, '<br/>')
+  return module.value.pageDate.replace(/\n/g, '<br/>')
 })
-interface Style {
+interface Style extends Record<string, unknown> {
   fontSize?: string
   fontWeight?: string
   color?: string
@@ -396,86 +393,9 @@ interface Tree {
   label: string   //标题
   url?: string  //图片路径
   children?: Tree[],
-  style?: Style,
-  dataSourceId?: string
+  style?: Style
 }
-const dataSource = ref<Tree[]>([
-  {
-    id: 1,
-    label: '第一部分市场运营总体情况',
-    type: 'paragraphTitle',
-    style: {
-      fontSize: '26px',
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: '20px'
-    },
-    dataSourceId: '',
-    children: [
-      {
-        id: 4,
-        label: '一、电力供需形势',
-        type: 'headline',
-        style: {
-          fontSize: '23px',
-          fontWeight: '500',
-          textAlign: 'left',
-          textIndent: '2em',
-          marginBottom: '20px',
-        },
-        children: [
-          {
-            id: 9,
-            label: '（一）电力供需分析（数据库-电力供需）',
-            type: 'subheading',
-            style: {
-              fontSize: '21px',
-              fontWeight: '350',
-              textAlign: 'left',
-              textIndent: '2em',
-              marginBottom: '20px',
-            },
-            children: [
-              {
-                id: 10,
-                label: '1.发电装机容量',
-                type: 'minimumHeading',
-                style: {
-                  fontSize: '19px',
-                  fontWeight: 'bolder',
-                  textAlign: 'left',
-                  marginBottom: '20px',
-                  textIndent: '2em',
-                  fontFamily: 'fangsong'
-                },
-                children: [
-                  {
-                    id: 11,
-                    type: 'textContent',
-
-                    label: `按不同机组类型、所属发电集团等分析本地区截至本月底的发电装机容量及同比情况，总结本地区发电装机主要特点。`,
-                    style: {
-                      fontSize: '19px',
-                      fontWeight: '200',
-                      textAlign: 'left',
-                      marginBottom: '20px',
-                      fontFamily: 'fangsong',
-                      whiteSpace: 'normal',
-                      wordBreak: 'break-all',
-                      textIndent: '2em',
-                      letterSpacing: '5px',
-                      lineHeight: '30px'
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-])
+const dataSource = ref<Tree[]>([])
 const NodeIcon = (data: Tree) => {
   switch (data.type) {
     case 'paragraphTitle':
@@ -547,9 +467,8 @@ const reload = () => {
   dataSource.value = [...dataSource.value]
 }
 // 修改节点
-const handleChange = (value: any, node: Node) => {
-
-  // node.data.label = value.data
+const handleChange = (value: string, node: Node) => {
+  node.data.label = value
 }
 // 点击节点
 const inputClick = (node: Node, data: Tree) => {
@@ -565,7 +484,7 @@ const inputClick = (node: Node, data: Tree) => {
 const exportWord = () => {
   const html = getModelHtml(getHtml(document.querySelector('.print') as Element), getStyle());
   console.log(html)
-  const fileName = title.value + ".doc"
+  const fileName = module.value.pageTitle + ".doc"
   FileSaver.saveAs(
     new Blob([html], { type: "application/msword;charset=utf-8" }),
     fileName
@@ -580,12 +499,11 @@ const getModelHtml = (mhtml: string, style: string) => {
 					<head>
             <meta charset="utf-8"></meta>
 					<style>
-
           .layout {width: 800px;height: auto;}
-              .attachment {color: black;font-weight: bolder;font-size: 25px;}
-              .text-heading {font-size: 35px;margin: 150px 0px 400px;text-align: center;}
-              .text-heading-end {margin-top: 550px;font-size: 22px;}
-						${style}
+          .attachment {color: black;font-weight: bolder;font-size: 25px;}
+          .text-heading {font-size: 35px;margin: 150px 0px 400px;text-align: center;}
+          .text-heading-end {margin-top: 550px;font-size: 22px;}
+					${style}
 					</style>
 
 					</head>
@@ -620,6 +538,11 @@ const getStyle = () => {
 }
 const inputClick2 = (type?: string) => {
   //pick.value = content.value.find((item) => item.type === type)
+}
+
+
+const dynamicStyle = (content: Tree) => {
+  return content.style as any
 }
 const component = ref<
   {
@@ -663,12 +586,7 @@ const handleAddImage: (obj: { base64: string, title: string }) => void = ({ base
 // 保存
 const saveFormRef = ref<FormInstance>()
 const saveVisible = ref(false)
-const saveParams = ref({
-  moduleName: '',
-  moduleCode: '',
-  moduleVersion: '',
-  remark: ''
-})
+
 const save = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   const res = await formEl.validate((valid: any) => {
@@ -680,24 +598,38 @@ const save = async (formEl: FormInstance | undefined) => {
   })
   if (!res) return
   const html = getModelHtml(getHtml(document.querySelector('.print') as Element), getStyle())
-  const params = {
-    moduleName: saveParams.value.moduleName,
-    moduleCode: saveParams.value.moduleCode,
-    moduleVersion: saveParams.value.moduleVersion,
+  const data = {
+    id: moduleId,
+    moduleName: module.value.moduleName,
+    moduleCode: module.value.moduleCode,
+    moduleVersion: module.value.moduleVersion,
     moduleType: 1,
     pageContent: html,
-    pageTitle: title.value,
-    pageDate: subTitle.value,
+    pageTitle: module.value.pageTitle,
+    pageDate: module.value.pageDate,
     status: 0,
-    remark: saveParams.value.remark
+    remark: module.value.remark
   }
-  const moduleRes = await reportApi.insertModule(params)
+  const moduleRes = await reportApi.updateModule(data)
 
-  //formatTree(dataSource.value)
-  const insertRes = await reportApi.insertModuleStyle({ moduleId: moduleRes.data, nodeInfo: JSON.stringify(dataSource.value), nodeList: dataSource.value })
+  // formatTree(dataSource.value)
+  reportApi.updateModuleStyle({ moduleId: moduleId, nodeInfo: JSON.stringify(dataSource.value), nodeList: dataSource.value })
+
 
   console.log(dataSource.value)
-  router.push({ path: '/word' })
+  router.push({
+    name: 'word',
+    // params: {
+    //   html: html,
+    //   title: title.value,
+    //   subTitle: subTitle.value,
+    //   dataSource: JSON.stringify(dataSource.value),
+    //   content: JSON.stringify(content.value),
+    //   moduleName: saveParams.value.moduleName,
+    //   moduleCode: saveParams.value.moduleCode,
+    //   moduleVersion: saveParams.value.moduleVersion,
+    // }
+  })
 }
 //遍历树节点 为每个节点添加style
 const formatTree = (nodeList: Tree[]) => {
@@ -707,38 +639,6 @@ const formatTree = (nodeList: Tree[]) => {
       formatTree(item.children)
     }
   })
-}
-const sourceList = ref([{
-  value: '@选项1',
-  link: '@黄金糕'
-}, {
-  value: '@选项2',
-  link: '@双皮奶'
-}, {
-  value: '@选项3',
-  link: '@蚵仔煎'
-}, {
-  value: '@选项4',
-  link: '@龙须面'
-}, {
-  value: '@选项5',
-  link: '@北京烤鸭'
-}])
-const querySearch = (queryString: string, cb: any) => {
-
-  const arr = queryString.split('@')
-  queryString = '@' + arr[arr.length - 1]
-  const results = queryString ? sourceList.value.filter(createFilter(queryString)) : sourceList.value;
-  // 调用 callback 返回建议列表的数据
-  cb(results);
-}
-const createFilter = (queryString: string) => {
-  return (sourceItem: any) => {
-    return (sourceItem.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-  };
-}
-const handleSelect = (item: any, data: any) => {
-  data.label += item.value
 }
 </script>
 
@@ -855,7 +755,6 @@ a {
   top: 0;
   padding: 20px;
   height: 100px;
-  flex: 1
 }
 
 .high-tree-node {

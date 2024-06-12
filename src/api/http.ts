@@ -33,7 +33,12 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.status === 200) {
-      return response;
+      if (response.data.success) {
+        return response.data;
+      } else {
+        ElMessage.error(response.data.msg);
+        return response.data;
+      }
     }
     ElMessage.info(JSON.stringify(response.status));
     return response;

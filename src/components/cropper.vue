@@ -30,7 +30,7 @@ watch(props, val => {
 */
 const clipImgEmitBase64Img = (cvs: any) => {
   // 将canvas转为图片数据 → 参数1:图片格式[image/webp, image/jpeg, image/png] | 参数2：图片裁剪后的清晰度，相当于压缩图片 0 - 1(只对jpeg与webp有效)
-  const base64 = cvs.toDataURL('image/webp', .75)
+  const base64 = cvs.toDataURL('image/jpeg', .75)
 
   // 裁剪后发送数据给父级
   emit('clip-img', base64)
@@ -63,5 +63,6 @@ onMounted(() => {
   object-fit: contain;
   display: block;
   max-width: 100%;
+  background-color: #FFF;
 }
 </style>

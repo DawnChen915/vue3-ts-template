@@ -124,6 +124,51 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     },
     component: () => import('@/views/word/newWord.vue'),
   },
+  {
+    path: '/word/editWord/:id',
+    name: 'editWord',
+    meta: {
+      title: 'editWord',
+      icon: '',
+    },
+    component: () => import('@/views/word/editWord.vue'),
+  },
+  {
+    path: '/word/sourceConfig',
+    name: 'sourceConfig',
+    meta: {
+      title: 'sourceConfig',
+      icon: '',
+    },
+    component: () => import('@/views/word/dataSourceConfig.vue'),
+  },
+  {
+    path: '/word/paramsConfig',
+    name: 'paramsConfig',
+    meta: {
+      title: 'paramsConfig',
+      icon: '',
+    },
+    component: () => import('@/views/word/dataParamsConfig.vue'),
+  },
+  {
+    path: '/iframe',
+    name: 'iframe',
+    meta: {
+      title: 'iframe',
+      icon: '',
+    },
+    component: () => import('@/views/html2Image/index.vue'),
+  },
+  {
+    path: '/demo',
+    name: 'Demo',
+    meta: {
+      title: 'Demo',
+      icon: '',
+    },
+    component: () => import('@/views/demo/selected.vue'),
+  },
 ];
 
 export default asyncRoutes;

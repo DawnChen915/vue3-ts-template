@@ -13,28 +13,34 @@
     </div>
     <div class="config">
       <div>表格配置
-        <el-button type="text" @click="addCol">增加列</el-button>
+        <el-button link type="primary" size="small" @click="addCol">增加列</el-button>
       </div>
       <el-table :data="tableHeader" size="small">
-        <el-table-column label="label">
+        <el-table-column label="label" align="center">
           <template #default="{ row }">
             <el-input v-model="row.label" placeholder=""></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="prop">
+        <el-table-column label="prop" align="center">
           <template #default="{ row }">
             <el-input v-model="row.prop" placeholder=""></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="align">
+        <!-- <el-table-column label="align">
           <template #default="{ row }">
-            <el-select v-model="row.align">
+            <el-select :model-value="row.align">
               <el-option label="居中" value="center"></el-option>
               <el-option label="居左" value="left"></el-option>
               <el-option label="居右" value="right"></el-option>
             </el-select>
           </template>
+        </el-table-column> -->
+        <el-table-column label="操作" align="center">
+          <template #default="{ row }">
+            <el-button @click="remove(row)" type="danger" size="small">删除</el-button>
+          </template>
         </el-table-column>
+
       </el-table>
     </div>
     <div class="flex">
@@ -46,9 +52,6 @@
 </template>
 
 <script setup lang='ts'>
-import { table } from 'console'
-
-
 const tableData = ref([])
 const tableHeader = ref([{
   label: '姓名',
@@ -92,6 +95,9 @@ const transferTable = () => {
       </table>
   `
   return htmlStr
+}
+const remove = (row: any) => {
+  tableHeader.value.splice(tableHeader.value.indexOf(row), 1)
 }
 
 </script>

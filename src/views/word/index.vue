@@ -9,12 +9,14 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="handleQuery">查询</el-button>
-        <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-button type="primary" @click="handleQuery" :loading="pageLoading">查询</el-button>
+        <el-button type="success" @click="handleAdd">新增</el-button>
+        <el-button type="warning" @click="configDataSource">数据源配置</el-button>
+        <el-button type="warning" @click="configDataParams">数据参数配置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" border>
-      <el-table-column prop="id" label="主键" align="center" />
+    <el-table :data="tableData" border v-loading="pageLoading">
+      <!-- <el-table-column prop="id" label="主键" align="center" /> -->
       <el-table-column prop="moduleName" label="模板名称" align="center" />
       <el-table-column prop="moduleCode" label="模板编号" align="center" />
       <el-table-column prop="moduleVersion" label="模板版本号" align="center" />
@@ -23,8 +25,9 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button link size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button link size="small" @click="handleRemove(scope.row)">删除</el-button>
-          <el-button link size="small" @click="perview(scope.row)">预览</el-button>
+          <el-button link size="small" type="danger" @click="handleRemove(scope.row)">删除</el-button>
+          <el-button link size="small" type="primary" @click="perview(scope.row)">预览</el-button>
+          <el-button link size="small" type="success" @click="download(scope.row)">下载模板</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,10 +70,12 @@
 </template>
 <script setup lang='ts'>
 import router from '@/router'
-
+import reportApi from '@/api/modules/word'
+import FileSaver from "file-saver";
 const queryForm = reactive({
 
   moduleName: '',
+
 
 })
 const tableData = ref([])
@@ -87,12 +92,28 @@ const form = ref({
   remark: '',
 })
 const formMode = ref('')
+onMounted(() => {
+  handleQuery()
+})
 const handleQuery = () => {
   currentPage.value = 1
   getData()
 }
+const pageLoading = ref<boolean>(false)
 const getData = () => {
-  tableData.value = []
+  const params = {
+    // moduleName: queryForm.moduleName,
+    current: currentPage.value,
+    size: pageSize.value,
+  }
+  pageLoading.value = true
+  reportApi.pageData(params).then((res: any) => {
+    tableData.value = res.data.records
+    total.value = res.data.total
+  }).finally(() => {
+    pageLoading.value = false
+  })
+  // tableData.value = []
 }
 const handleSizeChange = (val: number) => {
   pageSize.value = val
@@ -115,10 +136,9 @@ const handleAdd = () => {
   //   remark: '',
   // }
 }
+//编辑
 const handleEdit = (row: any) => {
-  formMode.value = '编辑'
-  dialogFormVisible.value = true
-  form.value = row
+  router.push('/word/editWord/' + row.id)
 }
 const formSubmit = () => {
   if (formMode.value === '新增') {
@@ -134,16 +154,20 @@ const formSubmit = () => {
   }
   dialogFormVisible.value = false
 }
+//删除模板
 const handleRemove = (row: any) => {
   ElMessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    ElMessage({
-      type: 'success',
-      message: '删除成功!'
-    });
+    reportApi.deleteModule(row.id).then((res: any) => {
+      getData()
+      ElMessage({
+        type: 'success',
+        message: '删除成功!'
+      });
+    })
   }).catch(() => {
     ElMessage({
       type: 'info',
@@ -153,24 +177,40 @@ const handleRemove = (row: any) => {
 }
 const route = useRoute()
 //展示数据
-if (route.params) {
-  const data = {
-    id: route.params.id,
-    moduleName: route.params.moduleName,
-    moduleCode: route.params.moduleCode,
-    moduleVersion: route.params.moduleVersion,
-    html: route.params.html,
-    statu: route.params.statu,
-    remark: route.params.remark,
-  }
-  tableData.value.push(data)
-}
+// if (route.params) {
+//   const data = {
+//     id: route.params.id,
+//     moduleName: route.params.moduleName,
+//     moduleCode: route.params.moduleCode,
+//     moduleVersion: route.params.moduleVersion,
+//     html: route.params.html,
+//     statu: route.params.statu,
+//     remark: route.params.remark,
+//   }
+//   tableData.value.push(data)
+// }
 //预览
 const perviewDialog = ref(false)
 const html = ref('')
 const perview = (row: any) => {
   perviewDialog.value = true
-  html.value = row.html
+  html.value = row.pageContent
+}
+//下载
+const download = (row: any) => {
+
+  FileSaver.saveAs(
+    new Blob([row.pageContent], { type: "application/msword;charset=utf-8" }),
+    row.moduleName + '.doc'
+  );
+}
+
+//数据源配置
+const configDataSource = () => {
+  router.push('/word/sourceConfig')
+}
+const configDataParams = () => {
+  router.push('/word/paramsConfig')
 }
 </script>
 <style scoped>

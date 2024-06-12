@@ -4,28 +4,25 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AtDialog: typeof import('./../src/components/AtDialog.vue')['default']
     Cropper: typeof import('./../src/components/cropper.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElCard: typeof import('element-plus/es')['ElCard']
-    ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
-    ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElForm: typeof import('element-plus/es')['ElForm']
-    ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
-    ElPagination: typeof import('element-plus/es')['ElPagination']
-    ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ElTree: typeof import('element-plus/es')['ElTree']
-    ElUpload: typeof import('element-plus/es')['ElUpload']
     ExampleMarkdown: typeof import('./../src/components/exampleMarkdown.md')['default']
     GoBackHome: typeof import('./../src/components/GoBackHome.vue')['default']
-    IMdiFileTableBoxMultipleOutline: typeof import('~icons/mdi/file-table-box-multiple-outline')['default']
+    IconH1: typeof import('./../src/components/icons/iconH1.vue')['default']
+    IconH2: typeof import('./../src/components/icons/iconH2.vue')['default']
+    IconH3: typeof import('./../src/components/icons/iconH3.vue')['default']
+    IconH4: typeof import('./../src/components/icons/iconH4.vue')['default']
+    IconTable: typeof import('./../src/components/icons/iconTable.vue')['default']
+    MyAutoComplete: typeof import('./../src/components/myAutoComplete.vue')['default']
+    ParamsMenu: typeof import('./../src/components/paramsMenu.vue')['default']
+    SandBox: typeof import('./../src/components/sandBox.vue')['default']
   }
 }
 

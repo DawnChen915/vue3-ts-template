@@ -3,11 +3,12 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn';
 import enLocale from 'element-plus/lib/locale/lang/en'
 const locale = zhCn;
 const en = enLocale
+const router = useRouter()
 </script>
 
-<template class="">
+<template>
   <div class="dark:bg-dark-50 dark:text-light-50">
-    <GoBackHome></GoBackHome>
+    <!-- <GoBackHome></GoBackHome> -->
     <div class="m-5">
       <el-config-provider :locale="locale">
         <router-view></router-view>

@@ -48,10 +48,10 @@
 import * as echarts from 'echarts'
 const chartsConfig = ref({
   title: '折线图',
-  xAxisData: "['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子']",
+  xAxisData: "['风电','光伏','水电','火电','核电','生物电']",
   series: [
     {
-      name: '销量',
+      name: '发电量',
       type: 'line',
       data: '[5,20,36,10,10,20]'
     }
@@ -63,12 +63,12 @@ const option = ref({
   },
   tooltip: {},
   xAxis: {
-    data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+    data: ['风电', '光伏', '水电', '火电', '核电', '生物电']
   },
   yAxis: {},
   series: [
     {
-      name: '销量',
+      name: '发电量',
       type: 'line',
       data: [
         5,

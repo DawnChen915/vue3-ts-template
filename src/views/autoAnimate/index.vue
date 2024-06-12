@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import autoAnimate from "@formkit/auto-animate"
-
+import sandBox from '@/components/sandBox.vue'
 const dropdown = ref() // we need a DOM node
 const show = ref(false)
 const items = ref(["😏", "😐", "😑", "😒", "😕"])
@@ -29,8 +29,15 @@ onMounted(() => {
     <li v-for="item in items" :key="item" @click="removeItem(item)" class="text-2xl ">
       {{ item }}lalala
     </li>
+    <sandBox></sandBox>
+
+
   </ul>
+  <div>
+
+  </div>
 </template>
+
 <style scoped>
 .dropdown {
   padding: 10px;
